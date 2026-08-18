@@ -1,0 +1,21 @@
+/node_modules
+/.next
+/out
+.env.local
+.env*.local
+*.tsbuildinfo
+next-env.d.ts
+.DS_Store
+
+# SQLite dev database (Prisma)
+/prisma/dev.db
+/prisma/dev.db-journal
+*.db
+*.db-journal
+
+# Uploaded product images (served from /public/uploads in dev)
+/public/uploads/*
+!/public/uploads/.gitkeep
+
+# Env with DATABASE_URL — provided per-environment (.env.local locally, Vercel dashboard in prod)
+.env
