@@ -5,6 +5,10 @@ import QuickBuy from "@/components/QuickBuy";
 import { getPromoProducts, getCatalogProducts } from "@/lib/products";
 import { sortProducts } from "@/lib/types";
 
+// Live storefront data (promos + popular products) — render on demand so the
+// build never needs the database.
+export const dynamic = "force-dynamic";
+
 export default async function HomePage() {
   // Hero highlights the most-searched (popular) products for quick buying.
   const [promos, catalog] = await Promise.all([getPromoProducts(), getCatalogProducts()]);
