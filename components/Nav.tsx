@@ -1,12 +1,33 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useCart } from "@/lib/cart";
 import { CATEGORIES, categoryToSlug } from "@/lib/types";
 import LeafMark from "@/components/LeafMark";
 
 export default function Nav() {
   const { count } = useCart();
+  const router = useRouter();
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [query, setQuery] = useState("");
+
+  // First click opens the field; a second submit (with text) runs the search.
+  const onSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!searchOpen) {
+      setSearchOpen(true);
+      return;
+    }
+    const term = query.trim();
+    if (term) {
+      router.push(`/search?q=${encodeURIComponent(term)}`);
+      setSearchOpen(false);
+    } else {
+      setSearchOpen(false);
+    }
+  };
 
   return (
     <>
@@ -38,9 +59,24 @@ export default function Nav() {
             <Link href="/#news">Подаръци</Link>
           </nav>
           <span className="nav-spacer" />
-          <button className="icon-btn" aria-label="Търсене" type="button">
-            🔍
-          </button>
+          <form className={`nav-search${searchOpen ? " open" : ""}`} role="search" onSubmit={onSearchSubmit}>
+            {searchOpen && (
+              <input
+                autoFocus
+                type="search"
+                className="nav-search-input"
+                placeholder="Търси играчка…"
+                aria-label="Търсене на играчки"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                onBlur={() => { if (!query.trim()) setSearchOpen(false); }}
+                onKeyDown={(e) => { if (e.key === "Escape") { setQuery(""); setSearchOpen(false); } }}
+              />
+            )}
+            <button className="icon-btn" aria-label="Търсене" type="submit">
+              🔍
+            </button>
+          </form>
           <Link className="icon-btn" href="/cart" aria-label="Количка">
             🛒<span className="cart-count">{count}</span>
           </Link>
