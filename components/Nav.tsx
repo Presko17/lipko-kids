@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/lib/cart";
 import { CATEGORIES, categoryToSlug } from "@/lib/types";
@@ -12,6 +12,19 @@ export default function Nav() {
   const router = useRouter();
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
+
+  // Bounce the cart icon whenever the item count grows.
+  const [bump, setBump] = useState(false);
+  const prevCount = useRef(count);
+  useEffect(() => {
+    if (count > prevCount.current) {
+      setBump(true);
+      const t = setTimeout(() => setBump(false), 520);
+      prevCount.current = count;
+      return () => clearTimeout(t);
+    }
+    prevCount.current = count;
+  }, [count]);
 
   // First click opens the field; a second submit (with text) runs the search.
   const onSearchSubmit = (e: React.FormEvent) => {
@@ -55,8 +68,6 @@ export default function Nav() {
                 ))}
               </div>
             </div>
-
-            <Link href="/#news">Подаръци</Link>
           </nav>
           <span className="nav-spacer" />
           <form className={`nav-search${searchOpen ? " open" : ""}`} role="search" onSubmit={onSearchSubmit}>
@@ -77,8 +88,8 @@ export default function Nav() {
               🔍
             </button>
           </form>
-          <Link className="icon-btn" href="/cart" aria-label="Количка">
-            🛒<span className="cart-count">{count}</span>
+          <Link className={`icon-btn cart-link${bump ? " bump" : ""}`} href="/cart" aria-label="Количка">
+            🛒<span className={`cart-count${bump ? " pop" : ""}`}>{count}</span>
           </Link>
         </div>
       </header>

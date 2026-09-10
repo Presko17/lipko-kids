@@ -5,7 +5,7 @@ import type { Product } from "@/lib/types";
 import { tintOf, primaryImage } from "@/lib/types";
 import { price } from "@/lib/money";
 import { useCart } from "@/lib/cart";
-import { toast } from "./Toaster";
+import { cartAdded } from "./CartAdded";
 
 // Compact product boxes for quick buying — main photo + a small "Купи" button
 // that adds straight to the cart.
@@ -24,7 +24,13 @@ export default function QuickBuy({ products }: { products: Product[] }) {
       material: p.material,
       age: p.age,
     });
-    toast(`${p.name} е добавена в количката`);
+    cartAdded({
+      name: p.name,
+      image: primaryImage(p),
+      emoji: p.emoji,
+      price: p.price,
+      qty: 1,
+    });
   };
 
   return (

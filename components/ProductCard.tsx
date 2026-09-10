@@ -6,7 +6,7 @@ import type { Product } from "@/lib/types";
 import { tintOf, primaryImage } from "@/lib/types";
 import { useCart } from "@/lib/cart";
 import { price } from "@/lib/money";
-import { toast } from "./Toaster";
+import { cartAdded } from "./CartAdded";
 
 export default function ProductCard({ product }: { product: Product }) {
   const { add } = useCart();
@@ -33,7 +33,13 @@ export default function ProductCard({ product }: { product: Product }) {
       age: product.age,
     });
     setAdded(true);
-    toast(`${product.name} е добавена в количката`);
+    cartAdded({
+      name: product.name,
+      image: primaryImage(product),
+      emoji: product.emoji,
+      price: product.price,
+      qty: 1,
+    });
     setTimeout(() => setAdded(false), 1200);
   };
 

@@ -4,7 +4,7 @@ import { useState } from "react";
 import type { Product } from "@/lib/types";
 import { primaryImage } from "@/lib/types";
 import { useCart } from "@/lib/cart";
-import { toast } from "./Toaster";
+import { cartAdded } from "./CartAdded";
 
 export default function ProductActions({ product }: { product: Product }) {
   const { add } = useCart();
@@ -28,7 +28,13 @@ export default function ProductActions({ product }: { product: Product }) {
       },
       qty
     );
-    toast(`${qty} × ${product.name} в количката`);
+    cartAdded({
+      name: product.name,
+      image: primaryImage(product),
+      emoji: product.emoji,
+      price: product.price,
+      qty,
+    });
     setAdded(true);
     setTimeout(() => setAdded(false), 1400);
   };

@@ -4,7 +4,7 @@ import type { Product } from "@/lib/types";
 import { primaryImage } from "@/lib/types";
 import { price } from "@/lib/money";
 import { useCart } from "@/lib/cart";
-import { toast } from "./Toaster";
+import { cartAdded } from "./CartAdded";
 
 // Sticky add-to-cart bar shown at the bottom on mobile product pages.
 export default function StickyBuyBar({ product }: { product: Product }) {
@@ -23,7 +23,13 @@ export default function StickyBuyBar({ product }: { product: Product }) {
       material: product.material,
       age: product.age,
     });
-    toast(`${product.name} е добавена в количката`);
+    cartAdded({
+      name: product.name,
+      image: primaryImage(product),
+      emoji: product.emoji,
+      price: product.price,
+      qty: 1,
+    });
   };
 
   return (

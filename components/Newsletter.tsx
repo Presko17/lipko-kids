@@ -8,19 +8,19 @@ export default function Newsletter() {
       <div className="news">
         <div className="deco" />
         <div>
-          <h2>10% отстъпка за първата поръчка</h2>
-          <p>Абонирайте се за нови продукти, идеи за игра по възраст и насоки за подаръци.</p>
+          <h2>Специални предложения за нашите абонати</h2>
+          <p>Абонирайте се за специални оферти, новите ни продукти и идеи за игра по възраст.</p>
         </div>
         <form
           onSubmit={(e) => {
             e.preventDefault();
             (e.target as HTMLFormElement).reset();
-            toast("Вече сте в списъка — 10% отстъпка пътува към вас");
+            toast("Вече сте в списъка — очаквайте специалните ни предложения");
           }}
         >
           <input type="email" placeholder="имейл@пример.bg" required aria-label="Имейл адрес" />
           <button className="btn btn-primary" type="submit">
-            Вземи 10%
+            Абонирай се
           </button>
         </form>
       </div>

@@ -3,6 +3,7 @@ import { getSettings } from "@/lib/settings";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import Toaster from "@/components/Toaster";
+import CartAdded from "@/components/CartAdded";
 import CookieBanner from "@/components/CookieBanner";
 
 // The layout reads store settings from the DB, so render on demand — the build
@@ -19,6 +20,7 @@ export default async function StoreLayout({ children }: { children: React.ReactN
       {children}
       <Footer />
       <Toaster />
+      <CartAdded />
       <CookieBanner />
     </CartProvider>
   );
