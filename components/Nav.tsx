@@ -6,12 +6,14 @@ import { useRouter } from "next/navigation";
 import { useCart } from "@/lib/cart";
 import { CATEGORIES, categoryToSlug } from "@/lib/types";
 import LeafMark from "@/components/LeafMark";
+import CartDrawer from "@/components/CartDrawer";
 
 export default function Nav() {
   const { count } = useCart();
   const router = useRouter();
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
+  const [cartOpen, setCartOpen] = useState(false);
 
   // Bounce the cart icon whenever the item count grows.
   const [bump, setBump] = useState(false);
@@ -88,11 +90,17 @@ export default function Nav() {
               🔍
             </button>
           </form>
-          <Link className={`icon-btn cart-link${bump ? " bump" : ""}`} href="/cart" aria-label="Количка">
+          <button
+            type="button"
+            className={`icon-btn cart-link${bump ? " bump" : ""}`}
+            aria-label="Количка"
+            onClick={() => setCartOpen(true)}
+          >
             🛒<span className={`cart-count${bump ? " pop" : ""}`}>{count}</span>
-          </Link>
+          </button>
         </div>
       </header>
+      <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} />
     </>
   );
 }

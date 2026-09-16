@@ -31,6 +31,7 @@ model Product {
   stock     Int      @default(0)
   active    Boolean  @default(true)
   promo     Boolean  @default(false) // на промоция — показва се на лендинг страницата
+  featured  Boolean  @default(false) // ръчно избран за „Най-търсени“ на началната страница
   supplierUrl String? // линк към продукта в сайта на доставчика (напр. Faire)
   sortOrder Int      @default(0)
   createdAt DateTime @default(now())

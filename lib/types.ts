@@ -21,6 +21,7 @@ export type Product = {
   stock: number;
   active: boolean;
   promo: boolean; // на промоция — показва се на лендинг страницата
+  featured: boolean; // ръчно избран за „Най-търсени“ в хероя на началната страница
   supplierUrl: string | null; // линк към продукта при доставчика
   createdAt: string; // ISO дата на добавяне (за сортиране „Най-нови“)
   popularity: number; // ръчна популярност (резервно подреждане при липса на отзиви)

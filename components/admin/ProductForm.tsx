@@ -152,6 +152,11 @@ export default function ProductForm({ product }: { product?: Product }) {
             <span>На промоция (показва се на началната страница вместо в категориите)</span>
           </label>
 
+          <label className="col-2 admin-check">
+            <input type="checkbox" name="featured" defaultChecked={p ? p.featured : false} />
+            <span>Показвай в „Най-търсени“ на началната страница (до 4 продукта)</span>
+          </label>
+
           <div className="col-2 admin-form-actions">
             <button className="btn btn-primary" type="submit">
               {p ? "Запази промените" : "Създай продукт"}

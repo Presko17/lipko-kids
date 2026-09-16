@@ -111,6 +111,7 @@ export async function saveProductAction(formData: FormData) {
     reviews: Math.round(num(formData.get("reviews"))),
     active: formData.get("active") === "on",
     promo: formData.get("promo") === "on",
+    featured: formData.get("featured") === "on",
     supplierUrl: String(formData.get("supplierUrl") || "").trim() || null,
   };
 

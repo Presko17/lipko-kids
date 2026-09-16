@@ -2,7 +2,7 @@ import Link from "next/link";
 import Shop from "@/components/Shop";
 import Newsletter from "@/components/Newsletter";
 import QuickBuy from "@/components/QuickBuy";
-import { getPromoProducts, getCatalogProducts } from "@/lib/products";
+import { getPromoProducts, getCatalogProducts, getFeaturedProducts } from "@/lib/products";
 import { sortProducts } from "@/lib/types";
 
 // Live storefront data (promos + popular products) — render on demand so the
@@ -10,9 +10,15 @@ import { sortProducts } from "@/lib/types";
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  // Hero highlights the most-searched (popular) products for quick buying.
-  const [promos, catalog] = await Promise.all([getPromoProducts(), getCatalogProducts()]);
-  const popular = sortProducts(catalog, "popular").slice(0, 4);
+  // Hero highlights the "most-searched" products for quick buying. The shop
+  // owner picks these manually (the "Най-търсени" tick in the product editor);
+  // if none are ticked yet, fall back to the most popular so it's never empty.
+  const [promos, catalog, featured] = await Promise.all([
+    getPromoProducts(),
+    getCatalogProducts(),
+    getFeaturedProducts(),
+  ]);
+  const popular = (featured.length > 0 ? featured : sortProducts(catalog, "popular")).slice(0, 4);
 
   return (
     <main>

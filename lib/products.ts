@@ -9,7 +9,7 @@ type Row = {
   id: string; name: string; price: number; oldPrice: number | null; cost: number | null; emoji: string; images: string | null;
   video: string | null; category: string; material: string; age: string;
   rating: number; reviews: number; tag: string | null; dim: string; desc: string;
-  stock: number; active: boolean; promo: boolean; supplierUrl: string | null;
+  stock: number; active: boolean; promo: boolean; featured: boolean; supplierUrl: string | null;
   createdAt: Date;
 };
 
@@ -44,6 +44,7 @@ function toProduct(row: Row): Product {
     stock: row.stock,
     active: row.active,
     promo: row.promo,
+    featured: row.featured,
     supplierUrl: row.supplierUrl ?? null,
     createdAt: row.createdAt.toISOString(),
     popularity: 0, // real value attached from the Setting store where needed
@@ -76,6 +77,16 @@ export async function getAllProducts(): Promise<Product[]> {
 export async function getPromoProducts(): Promise<Product[]> {
   const rows = await prisma.product.findMany({
     where: { active: true, promo: true },
+    orderBy: [{ sortOrder: "asc" }, { createdAt: "asc" }],
+  });
+  return rows.map(toProduct);
+}
+
+// Manually featured products — the shop owner ticks "Най-търсени" on a product
+// to place it in the hero on the landing page. Ordered by sortOrder.
+export async function getFeaturedProducts(): Promise<Product[]> {
+  const rows = await prisma.product.findMany({
+    where: { active: true, featured: true },
     orderBy: [{ sortOrder: "asc" }, { createdAt: "asc" }],
   });
   return rows.map(toProduct);
