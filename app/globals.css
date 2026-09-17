@@ -847,7 +847,7 @@ footer { padding: 60px 0 40px; border-top: 1px solid var(--line); }
 .order-line-amt,
 .order-total span:last-child,
 .admin-stat-value,
-.orders-table td.num,
+td.num,
 .pdp-reviews-summary { font-family: var(--price-font); }
 
 /* Nav search: icon button that expands into an input when opened. */
@@ -922,9 +922,9 @@ footer { padding: 60px 0 40px; border-top: 1px solid var(--line); }
 .cart-added-thumb img { width: 100%; height: 100%; object-fit: cover; }
 .cart-added-meta { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
 .cart-added-name { font-size: 14px; font-weight: 600; color: var(--ink); line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.cart-added-price { font-family: var(--display); font-weight: 600; font-size: 15px; color: var(--ink); font-variant-numeric: tabular-nums; }
+.cart-added-price { font-family: var(--price-font); font-weight: 600; font-size: 15px; color: var(--ink); font-variant-numeric: tabular-nums; }
 
-.cart-added-sum { margin: 13px 0 14px; font-size: 13px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 12px; }
+.cart-added-sum { font-family: var(--price-font); margin: 13px 0 14px; font-size: 13px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 12px; }
 .cart-added-sum b { color: var(--ink); }
 
 .cart-added-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
@@ -963,7 +963,7 @@ footer { padding: 60px 0 40px; border-top: 1px solid var(--line); }
 .drawer-line-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 5px; }
 .drawer-line-name { font-size: 14px; font-weight: 600; color: var(--ink); line-height: 1.3; }
 .drawer-line-name:hover { color: var(--accent); }
-.drawer-line-price { font-family: var(--display); font-weight: 600; font-size: 16px; font-variant-numeric: tabular-nums; }
+.drawer-line-price { font-family: var(--price-font); font-weight: 600; font-size: 16px; font-variant-numeric: tabular-nums; }
 .drawer-line-row { display: flex; align-items: center; justify-content: space-between; margin-top: 3px; }
 .drawer-qty button { width: 34px; height: 36px; font-size: 17px; }
 .drawer-qty .qval { min-width: 28px; }
@@ -972,7 +972,7 @@ footer { padding: 60px 0 40px; border-top: 1px solid var(--line); }
 
 .drawer-foot { flex: none; border-top: 1px solid var(--line); padding: 18px 22px 22px; }
 .drawer-sum { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 14px; font-size: 14px; color: var(--muted); }
-.drawer-sum b { font-family: var(--display); font-size: 22px; color: var(--ink); font-variant-numeric: tabular-nums; }
+.drawer-sum b { font-family: var(--price-font); font-size: 22px; color: var(--ink); font-variant-numeric: tabular-nums; }
 .drawer-actions { display: flex; flex-direction: column; gap: 10px; }
 .drawer-actions .btn { width: 100%; padding: 14px; display: grid; place-items: center; }
 .drawer-viewcart { background: var(--card); border: 1px solid var(--line-strong); color: var(--ink); }
