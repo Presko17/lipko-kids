@@ -1,15 +1,16 @@
 import Link from "next/link";
 import { SITE } from "@/lib/site";
 import { CATEGORIES, categoryToSlug } from "@/lib/types";
+import { eurAmount } from "@/lib/money";
 import LeafMark from "@/components/LeafMark";
 
-export default function Footer() {
+export default function Footer({ freeOver }: { freeOver: number }) {
   const topCats = CATEGORIES.slice(0, 4);
   return (
     <footer>
       <div className="wrap">
         <div className="foot-promise">
-          🚚 Доставка до 2–3 работни дни · безплатна над 75 лв · лесно връщане до 30 дни
+          🚚 Доставка до 2–3 работни дни · безплатна над {eurAmount(freeOver)} € · лесно връщане до 30 дни
         </div>
         <div className="foot-grid">
           <div>

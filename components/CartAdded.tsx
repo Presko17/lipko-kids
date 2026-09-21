@@ -11,6 +11,7 @@ export type CartAddedDetail = {
   emoji: string;
   price: number;
   qty: number;
+  variant?: string;
 };
 
 // Fire the "added to cart" popup from anywhere (product card, PDP, quick buy…).
@@ -73,6 +74,7 @@ export default function CartAdded() {
             </div>
             <div className="cart-added-meta">
               <span className="cart-added-name">{item.name}</span>
+              {item.variant && <span className="cart-added-variant">{item.variant}</span>}
               <span className="cart-added-price">
                 {item.qty > 1 ? `${item.qty} × ` : ""}
                 {price(item.price)}

@@ -5,11 +5,16 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/lib/cart";
 import { CATEGORIES, categoryToSlug } from "@/lib/types";
+import { bgnToEur } from "@/lib/money";
 import LeafMark from "@/components/LeafMark";
 import CartDrawer from "@/components/CartDrawer";
 
 export default function Nav() {
-  const { count } = useCart();
+  const { count, totals } = useCart();
+
+  // Free-shipping threshold comes from the store settings (in лв), shown in €.
+  const freeEur = bgnToEur(totals().freeOver);
+  const freeStr = Number.isInteger(freeEur) ? String(freeEur) : freeEur.toFixed(2);
   const router = useRouter();
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -47,7 +52,7 @@ export default function Nav() {
   return (
     <>
       <div className="announce">
-        Учене чрез игра · Безплатна доставка над 75 лв · Възраст 1–8
+        Учене чрез игра. Безплатна доставка над {freeStr} €. Възраст 3+.
       </div>
       <header className="nav">
         <div className="wrap nav-inner">

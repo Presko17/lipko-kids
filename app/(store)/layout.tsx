@@ -18,7 +18,7 @@ export default async function StoreLayout({ children }: { children: React.ReactN
     <CartProvider freeOver={settings.freeShippingThreshold} shipRate={settings.shippingRate}>
       <Nav />
       {children}
-      <Footer />
+      <Footer freeOver={settings.freeShippingThreshold} />
       <Toaster />
       <CartAdded />
       <CookieBanner />

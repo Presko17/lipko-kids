@@ -1,6 +1,8 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { SITE } from "@/lib/site";
+import { eurAmount } from "@/lib/money";
+import { getSettings } from "@/lib/settings";
 import JsonLd from "@/components/JsonLd";
 
 export const metadata: Metadata = {
@@ -10,10 +12,11 @@ export const metadata: Metadata = {
 };
 
 // Едит тук: реалните ти условия за доставка/връщане/контакт.
-const FAQ = [
+// `freeStr` е прагът за безплатна доставка (в €), вързан към настройките.
+const buildFaq = (freeStr: string) => [
   {
     q: "Колко струва доставката и кога ще получа поръчката си?",
-    a: "Доставяме до 2–3 работни дни в цялата страна. Доставката е безплатна за поръчки над 75 лв, а под този праг се калкулира стандартна такса на финалната стъпка при поръчка.",
+    a: `Доставяме до 2–3 работни дни в цялата страна. Доставката е безплатна за поръчки над ${freeStr} €, а под този праг се калкулира стандартна такса на финалната стъпка при поръчка.`,
   },
   {
     q: "Мога ли да върна или заменя играчка?",
@@ -33,7 +36,9 @@ const FAQ = [
   },
 ];
 
-export default function FaqPage() {
+export default async function FaqPage() {
+  const settings = await getSettings();
+  const FAQ = buildFaq(eurAmount(settings.freeShippingThreshold));
   const schema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",

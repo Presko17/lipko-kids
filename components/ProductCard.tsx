@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import type { Product } from "@/lib/types";
-import { tintOf, primaryImage } from "@/lib/types";
+import { tintOf, primaryImage, defaultVariantLabel } from "@/lib/types";
 import { useCart } from "@/lib/cart";
 import { price } from "@/lib/money";
 import { cartAdded } from "./CartAdded";
@@ -22,6 +22,7 @@ export default function ProductCard({ product }: { product: Product }) {
     e.preventDefault();
     e.stopPropagation();
     if (soldOut) return;
+    const variant = defaultVariantLabel(product.variants);
     add({
       id: product.id,
       name: product.name,
@@ -31,6 +32,7 @@ export default function ProductCard({ product }: { product: Product }) {
       category: product.category,
       material: product.material,
       age: product.age,
+      variant,
     });
     setAdded(true);
     cartAdded({
@@ -39,6 +41,7 @@ export default function ProductCard({ product }: { product: Product }) {
       emoji: product.emoji,
       price: product.price,
       qty: 1,
+      variant,
     });
     setTimeout(() => setAdded(false), 1200);
   };

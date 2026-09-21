@@ -4,6 +4,7 @@ import { saveOrder } from "@/lib/orders";
 import { getProduct } from "@/lib/products";
 import { prisma } from "@/lib/prisma";
 import { eurToBgn } from "@/lib/money";
+import { splitCartKey } from "@/lib/types";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -41,10 +42,16 @@ export async function POST(req: NextRequest) {
       const cart: Record<string, number> = JSON.parse(session.metadata?.cart || "{}");
 
       const items = [];
-      for (const [id, qty] of Object.entries(cart)) {
+      for (const [key, qty] of Object.entries(cart)) {
+        const { id, variant } = splitCartKey(key);
         const p = await getProduct(id);
         if (!p) continue;
-        items.push({ productId: id, name: p.name, quantity: qty, amount: p.price * qty });
+        items.push({
+          productId: id,
+          name: variant ? `${p.name} — ${variant}` : p.name,
+          quantity: qty,
+          amount: p.price * qty,
+        });
         // Decrement stock (never below zero).
         await prisma.product.update({
           where: { id },

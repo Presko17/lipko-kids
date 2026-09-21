@@ -1,6 +1,9 @@
 // Shared types + pure helpers. Safe to import from both server and client code
 // (no database access here).
 
+// A variant group, e.g. { label: "Цвят", options: ["Син", "Зелен", "Оранжев"] }.
+export type VariantGroup = { label: string; options: string[] };
+
 export type Product = {
   id: string;
   name: string;
@@ -22,6 +25,7 @@ export type Product = {
   active: boolean;
   promo: boolean; // на промоция — показва се на лендинг страницата
   featured: boolean; // ръчно избран за „Най-търсени“ в хероя на началната страница
+  variants: VariantGroup[]; // опции за избор (цвят/размер и др.); празен масив = без варианти
   supplierUrl: string | null; // линк към продукта при доставчика
   createdAt: string; // ISO дата на добавяне (за сортиране „Най-нови“)
   popularity: number; // ръчна популярност (резервно подреждане при липса на отзиви)
@@ -40,7 +44,65 @@ export type CartProduct = {
   category: string;
   material: string;
   age: string;
+  variant?: string; // human label of the chosen variant, e.g. "Цвят: Син"
 };
+
+// Cart line key: same product in different variants are separate lines.
+export const cartKey = (p: { id: string; variant?: string }): string =>
+  p.variant ? `${p.id}##${p.variant}` : p.id;
+
+// Split a cart key back into the base product id + variant label.
+export const splitCartKey = (key: string): { id: string; variant: string } => {
+  const i = key.indexOf("##");
+  return i === -1 ? { id: key, variant: "" } : { id: key.slice(0, i), variant: key.slice(i + 2) };
+};
+
+// Parse the JSON stored in Product.variants into typed groups (safe on junk).
+export function parseVariants(json: string | null | undefined): VariantGroup[] {
+  if (!json) return [];
+  try {
+    const arr = JSON.parse(json);
+    if (!Array.isArray(arr)) return [];
+    return arr
+      .map((g) => ({
+        label: String(g?.label ?? "").trim(),
+        options: Array.isArray(g?.options)
+          ? g.options.map((o: unknown) => String(o).trim()).filter(Boolean)
+          : [],
+      }))
+      .filter((g) => g.label && g.options.length > 0);
+  } catch {
+    return [];
+  }
+}
+
+// Admin textarea <-> variant groups. One group per line: "Цвят: Син, Зелен".
+export function variantsToText(groups: VariantGroup[]): string {
+  return groups.map((g) => `${g.label}: ${g.options.join(", ")}`).join("\n");
+}
+export function textToVariants(text: string): VariantGroup[] {
+  return text
+    .split("\n")
+    .map((line) => {
+      const i = line.indexOf(":");
+      if (i === -1) return null;
+      const label = line.slice(0, i).trim();
+      const options = line
+        .slice(i + 1)
+        .split(",")
+        .map((o) => o.trim())
+        .filter(Boolean);
+      return label && options.length > 0 ? { label, options } : null;
+    })
+    .filter((g): g is VariantGroup => g !== null);
+}
+
+// Default selection label (first option of each group), used for quick-add
+// from listings where the shopper hasn't opened the product page.
+export function defaultVariantLabel(groups: VariantGroup[]): string | undefined {
+  if (groups.length === 0) return undefined;
+  return groups.map((g) => `${g.label}: ${g.options[0]}`).join(" · ");
+}
 
 export const CATEGORIES = [
   "Образователни",

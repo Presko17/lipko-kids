@@ -19,6 +19,7 @@ model Product {
   cost      Float? // покупна/доставна цена в лева (BGN) — за печалба/марж
   emoji     String
   images    String? // JSON масив от пътища; първата е основна, напр. ["/uploads/a.jpg","/uploads/b.jpg"]
+  variants  String? // JSON: групи варианти, напр. [{"label":"Цвят","options":["Син","Зелен"]}]
   video     String? // YouTube/Vimeo линк или качен файл /uploads/xyz.mp4
   category  String
   material  String

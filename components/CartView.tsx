@@ -83,6 +83,7 @@ export default function CartView() {
                   <Link className="line-name" href={`/product/${p.id}`}>
                     {p.name}
                   </Link>
+                  {p.variant && <div className="line-variant">{p.variant}</div>}
                   <div className="line-meta">
                     {p.category} · {p.material} · Възраст {p.age}
                   </div>

@@ -96,6 +96,7 @@ export default function CartDrawer({ open, onClose }: { open: boolean; onClose: 
                       <Link className="drawer-line-name" href={`/product/${p.id}`} onClick={onClose}>
                         {p.name}
                       </Link>
+                      {p.variant && <div className="drawer-line-variant">{p.variant}</div>}
                       <div className="drawer-line-price">{money(p.price * qty)}</div>
                       <div className="drawer-line-row">
                         <div className="qty drawer-qty">

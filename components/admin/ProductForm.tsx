@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Product } from "@/lib/types";
-import { CATEGORIES, TAGS } from "@/lib/types";
+import { CATEGORIES, TAGS, variantsToText } from "@/lib/types";
 import { bgnToEur } from "@/lib/money";
 import { saveProductAction, deleteProductAction } from "@/app/admin/actions";
 import PriceEuroInput from "./PriceEuroInput";
@@ -40,6 +40,7 @@ export default function ProductForm({ product }: { product?: Product }) {
             label="Покупна цена (€)"
             note="за печалба/марж"
             required={false}
+            profit
             defaultEuro={p?.cost != null ? bgnToEur(p.cost) : ""}
           />
           <PriceEuroInput
@@ -120,6 +121,21 @@ export default function ProductForm({ product }: { product?: Product }) {
           <label className="col-2">
             <span>Описание</span>
             <textarea name="desc" rows={4} defaultValue={p?.desc || ""} />
+          </label>
+
+          <label className="col-2">
+            <span>
+              Варианти{" "}
+              <span className="admin-note">
+                (по желание — една група на ред, напр. „Цвят: Син, Зелен, Оранжев“)
+              </span>
+            </span>
+            <textarea
+              name="variants"
+              rows={3}
+              defaultValue={variantsToText(p?.variants || [])}
+              placeholder={"Цвят: Син, Зелен, Оранжев\nРазмер: S, M, L"}
+            />
           </label>
 
           <label className="col-2">

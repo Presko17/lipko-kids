@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import type { CartProduct } from "./types";
+import { cartKey } from "./types";
 
 type CartItems = Record<string, { qty: number; product: CartProduct }>;
 const KEY = "toybox-cart-v2";
@@ -52,10 +53,10 @@ export function CartProvider({
   }, [items, ready]);
 
   const add = (product: CartProduct, qty = 1) =>
-    setItems((prev) => ({
-      ...prev,
-      [product.id]: { qty: (prev[product.id]?.qty || 0) + qty, product },
-    }));
+    setItems((prev) => {
+      const key = cartKey(product);
+      return { ...prev, [key]: { qty: (prev[key]?.qty || 0) + qty, product } };
+    });
 
   const setQty = (id: string, qty: number) =>
     setItems((prev) => {

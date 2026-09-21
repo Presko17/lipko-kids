@@ -3,7 +3,8 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getProduct, getRelated } from "@/lib/products";
 import { stars, tintOf, categoryToSlug, primaryImage } from "@/lib/types";
-import { price } from "@/lib/money";
+import { price, eurAmount } from "@/lib/money";
+import { getSettings } from "@/lib/settings";
 import { abs } from "@/lib/site";
 import ProductActions from "@/components/ProductActions";
 import ProductGallery from "@/components/ProductGallery";
@@ -48,6 +49,7 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
   if (!p || !p.active) notFound();
 
   const related = await getRelated(p);
+  const settings = await getSettings();
   const catSlug = categoryToSlug(p.category);
   const hasReviews = p.reviews > 0;
 
@@ -124,7 +126,7 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
 
           <ul className="assure">
             <li>
-              <span className="mk m-circ" /> Безплатна доставка над 75 лв
+              <span className="mk m-circ" /> Безплатна доставка над {eurAmount(settings.freeShippingThreshold)} €
             </li>
             <li>
               <span className="mk m-tri" /> Лесно връщане до 30 дни

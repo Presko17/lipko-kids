@@ -37,6 +37,7 @@ export default async function AdminProductsPage() {
                 <th className="num">Цена</th>
                 <th className="num">Наличност</th>
                 <th>Статус</th>
+                <th>Етикети</th>
                 <th></th>
               </tr>
             </thead>
@@ -62,6 +63,13 @@ export default async function AdminProductsPage() {
                     <span className={`admin-pill ${p.active ? "ok" : ""}`}>
                       {p.active ? "Активен" : "Скрит"}
                     </span>
+                  </td>
+                  <td>
+                    <div className="admin-tags">
+                      {p.promo && <span className="admin-tag promo">Промо</span>}
+                      {p.featured && <span className="admin-tag featured">Търсен</span>}
+                      {!p.promo && !p.featured && <span className="admin-tag-none">—</span>}
+                    </div>
                   </td>
                   <td className="admin-row-actions">
                     <DeleteProductButton id={p.id} name={p.name} />

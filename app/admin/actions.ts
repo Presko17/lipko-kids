@@ -7,6 +7,7 @@ import { requireAdmin } from "@/lib/admin-auth";
 import { updateOrder } from "@/lib/orders";
 import { saveSettings, getCategoryImage, setCategoryImage, setPopularity } from "@/lib/settings";
 import { eurToBgn } from "@/lib/money";
+import { textToVariants } from "@/lib/types";
 import { extractFromUrl, type ExtractedProduct } from "@/lib/import";
 import { saveFile, deleteFile } from "@/lib/storage";
 
@@ -75,6 +76,12 @@ function optionalEurToBgn(v: FormDataEntryValue | null): number | null {
   return s === "" ? null : eurToBgn(num(v));
 }
 
+// Parse the admin variants textarea into stored JSON (or null when empty).
+function variantsJson(v: FormDataEntryValue | null): string | null {
+  const groups = textToVariants(String(v ?? ""));
+  return groups.length ? JSON.stringify(groups) : null;
+}
+
 // ---- Orders ----
 export async function updateOrderAction(formData: FormData) {
   await requireAdmin();
@@ -112,6 +119,7 @@ export async function saveProductAction(formData: FormData) {
     active: formData.get("active") === "on",
     promo: formData.get("promo") === "on",
     featured: formData.get("featured") === "on",
+    variants: variantsJson(formData.get("variants")),
     supplierUrl: String(formData.get("supplierUrl") || "").trim() || null,
   };
 

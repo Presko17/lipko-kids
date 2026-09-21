@@ -3,6 +3,7 @@ import Stripe from "stripe";
 import { getProduct } from "@/lib/products";
 import { getSettings } from "@/lib/settings";
 import { bgnToEur } from "@/lib/money";
+import { splitCartKey } from "@/lib/types";
 
 // Create a Stripe Checkout Session from the cart and return its hosted URL.
 // Prices are ALWAYS read from our own database on the server — never trusted
@@ -26,16 +27,20 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Невалидна заявка." }, { status: 400 });
   }
 
-  const ids = Object.keys(items).filter((id) => Number(items[id]) > 0);
-  const products = await Promise.all(ids.map((id) => getProduct(id)));
+  // Cart keys may carry a variant suffix (id##Цвят: Син) — split it out, look up
+  // the product by its base id, and keep the variant for the line-item name.
+  const keys = Object.keys(items).filter((k) => Number(items[k]) > 0);
+  const parsed = keys.map((k) => splitCartKey(k));
+  const products = await Promise.all(parsed.map((x) => getProduct(x.id)));
 
   const line_items = [];
   const cartForMeta: Record<string, number> = {};
   let subtotal = 0;
 
-  for (let i = 0; i < ids.length; i++) {
+  for (let i = 0; i < keys.length; i++) {
     const p = products[i];
-    const qty = items[ids[i]];
+    const qty = items[keys[i]];
+    const variant = parsed[i].variant;
     if (!p || !p.active) continue;
     if (p.stock < qty) {
       return NextResponse.json(
@@ -48,10 +53,13 @@ export async function POST(req: NextRequest) {
       price_data: {
         currency: "eur",
         unit_amount: Math.round(bgnToEur(p.price) * 100), // в евроцентове (лв → €, България вече е в еврозоната)
-        product_data: { name: p.name, description: `${p.material} · Възраст ${p.age}` },
+        product_data: {
+          name: variant ? `${p.name} — ${variant}` : p.name,
+          description: `${p.material} · Възраст ${p.age}`,
+        },
       },
     });
-    cartForMeta[p.id] = qty;
+    cartForMeta[keys[i]] = qty;
     subtotal += p.price * qty;
   }
 

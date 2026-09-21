@@ -1,5 +1,6 @@
 import { prisma } from "./prisma";
 import type { Product } from "./types";
+import { parseVariants } from "./types";
 import { getCategoryImages, getPopularities, getPopularity } from "./settings";
 
 // Server-side catalog access. The storefront and admin both read products from
@@ -9,7 +10,7 @@ type Row = {
   id: string; name: string; price: number; oldPrice: number | null; cost: number | null; emoji: string; images: string | null;
   video: string | null; category: string; material: string; age: string;
   rating: number; reviews: number; tag: string | null; dim: string; desc: string;
-  stock: number; active: boolean; promo: boolean; featured: boolean; supplierUrl: string | null;
+  stock: number; active: boolean; promo: boolean; featured: boolean; variants: string | null; supplierUrl: string | null;
   createdAt: Date;
 };
 
@@ -45,6 +46,7 @@ function toProduct(row: Row): Product {
     active: row.active,
     promo: row.promo,
     featured: row.featured,
+    variants: parseVariants(row.variants),
     supplierUrl: row.supplierUrl ?? null,
     createdAt: row.createdAt.toISOString(),
     popularity: 0, // real value attached from the Setting store where needed

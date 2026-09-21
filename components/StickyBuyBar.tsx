@@ -1,7 +1,7 @@
 "use client";
 
 import type { Product } from "@/lib/types";
-import { primaryImage } from "@/lib/types";
+import { primaryImage, defaultVariantLabel } from "@/lib/types";
 import { price } from "@/lib/money";
 import { useCart } from "@/lib/cart";
 import { cartAdded } from "./CartAdded";
@@ -13,6 +13,7 @@ export default function StickyBuyBar({ product }: { product: Product }) {
 
   const onAdd = () => {
     if (soldOut) return;
+    const variant = defaultVariantLabel(product.variants);
     add({
       id: product.id,
       name: product.name,
@@ -22,6 +23,7 @@ export default function StickyBuyBar({ product }: { product: Product }) {
       category: product.category,
       material: product.material,
       age: product.age,
+      variant,
     });
     cartAdded({
       name: product.name,
@@ -29,6 +31,7 @@ export default function StickyBuyBar({ product }: { product: Product }) {
       emoji: product.emoji,
       price: product.price,
       qty: 1,
+      variant,
     });
   };
 

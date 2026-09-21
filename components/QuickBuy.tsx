@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import type { Product } from "@/lib/types";
-import { tintOf, primaryImage } from "@/lib/types";
+import { tintOf, primaryImage, defaultVariantLabel } from "@/lib/types";
 import { price } from "@/lib/money";
 import { useCart } from "@/lib/cart";
 import { cartAdded } from "./CartAdded";
@@ -14,6 +14,7 @@ export default function QuickBuy({ products }: { products: Product[] }) {
 
   const buy = (p: Product) => {
     if (p.stock <= 0) return;
+    const variant = defaultVariantLabel(p.variants);
     add({
       id: p.id,
       name: p.name,
@@ -23,6 +24,7 @@ export default function QuickBuy({ products }: { products: Product[] }) {
       category: p.category,
       material: p.material,
       age: p.age,
+      variant,
     });
     cartAdded({
       name: p.name,
@@ -30,6 +32,7 @@ export default function QuickBuy({ products }: { products: Product[] }) {
       emoji: p.emoji,
       price: p.price,
       qty: 1,
+      variant,
     });
   };
 

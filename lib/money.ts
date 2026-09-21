@@ -15,3 +15,10 @@ export const price = (bgn: number) =>
 // These convert between the two (rounded to stotinki).
 export const eurToBgn = (e: number) => Math.round(e * BGN_PER_EUR * 100) / 100;
 export const bgnToEur = (bgn: number) => Math.round((bgn / BGN_PER_EUR) * 100) / 100;
+
+// A лв amount shown as a clean € figure, e.g. 100 лв → "51.13", 50 лв → "25.56".
+// Whole euro values drop the decimals. Used for the free-shipping threshold.
+export const eurAmount = (bgn: number) => {
+  const n = bgnToEur(bgn);
+  return Number.isInteger(n) ? String(n) : n.toFixed(2);
+};
