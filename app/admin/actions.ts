@@ -329,8 +329,9 @@ export async function saveSettingsAction(formData: FormData) {
   await requireAdmin();
   await saveSettings({
     storeName: String(formData.get("storeName") || "Липко"),
-    freeShippingThreshold: num(formData.get("freeShippingThreshold"), 75),
-    shippingRate: num(formData.get("shippingRate"), 6.95),
+    // Entered in € in the admin, stored in лв internally.
+    freeShippingThreshold: eurToBgn(num(formData.get("freeShippingThreshold"))),
+    shippingRate: eurToBgn(num(formData.get("shippingRate"))),
   });
   revalidatePath("/admin/settings");
   revalidatePath("/", "layout");

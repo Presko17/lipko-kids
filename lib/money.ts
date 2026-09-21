@@ -4,12 +4,12 @@ export const BGN_PER_EUR = 1.95583;
 
 const eur = (bgn: number) => (bgn / BGN_PER_EUR).toFixed(2);
 
-// Totals and any amount that may have stotinki, e.g. "98.68 €/193,00 лв".
-export const money = (bgn: number) => `${eur(bgn)} €/${bgn.toFixed(2).replace(".", ",")} лв`;
+// All amounts are shown in euro only, e.g. "98.68 €". Prices are stored in лв
+// internally (and Stripe charges the euro equivalent), but лв is never displayed.
+export const money = (bgn: number) => `${eur(bgn)} €`;
 
-// Whole-number product prices, e.g. "34.77 €/68 лв".
-export const price = (bgn: number) =>
-  `${eur(bgn)} €/${Math.round(bgn).toLocaleString("bg-BG")} лв`;
+// Product prices, also euro only, e.g. "34.77 €".
+export const price = (bgn: number) => `${eur(bgn)} €`;
 
 // Product prices are entered in € in the admin, but stored/charged in лв.
 // These convert between the two (rounded to stotinki).

@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getProduct, getRelated } from "@/lib/products";
 import { stars, tintOf, categoryToSlug, primaryImage } from "@/lib/types";
-import { price, eurAmount } from "@/lib/money";
+import { price, eurAmount, bgnToEur } from "@/lib/money";
 import { getSettings } from "@/lib/settings";
 import { abs } from "@/lib/site";
 import ProductActions from "@/components/ProductActions";
@@ -63,8 +63,8 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
     brand: { "@type": "Brand", name: "Липко" },
     offers: {
       "@type": "Offer",
-      price: p.price.toFixed(2),
-      priceCurrency: "BGN",
+      price: bgnToEur(p.price).toFixed(2),
+      priceCurrency: "EUR",
       availability: p.stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
       url: abs(`/product/${p.id}`),
     },

@@ -40,7 +40,7 @@ const orgSchema = {
   image: abs("/opengraph-image"),
   logo: abs("/opengraph-image"),
   areaServed: "BG",
-  currenciesAccepted: "BGN, EUR",
+  currenciesAccepted: "EUR",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
