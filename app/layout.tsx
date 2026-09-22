@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { SITE, abs } from "@/lib/site";
 import Analytics from "@/components/Analytics";
+import MetaPixel from "@/components/MetaPixel";
 import JsonLd from "@/components/JsonLd";
 
 export const metadata: Metadata = {
@@ -50,6 +51,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {children}
         <JsonLd data={orgSchema} />
         <Analytics />
+        <MetaPixel />
       </body>
     </html>
   );

@@ -4,8 +4,9 @@ import { useState } from "react";
 import Link from "next/link";
 import { useCart } from "@/lib/cart";
 import { tintOf } from "@/lib/types";
-import { money } from "@/lib/money";
+import { money, bgnToEur } from "@/lib/money";
 import { toast } from "./Toaster";
+import { fbTrack } from "./MetaPixel";
 
 export default function CartView() {
   const { items, ready, setQty, remove, totals } = useCart();
@@ -42,6 +43,14 @@ export default function CartView() {
 
   const checkout = async () => {
     setLoading(true);
+    // Ad tracking: mark checkout start and stash the value for the Purchase event.
+    const eurTotal = Math.round(bgnToEur(total) * 100) / 100;
+    try {
+      sessionStorage.setItem("lipko-purchase-value", String(eurTotal));
+    } catch {
+      /* ignore */
+    }
+    fbTrack("InitiateCheckout", { value: eurTotal, currency: "EUR", num_items: count });
     try {
       const payload = Object.fromEntries(ids.map((id) => [id, items[id].qty]));
       const res = await fetch("/api/checkout", {

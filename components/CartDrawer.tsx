@@ -4,8 +4,9 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useCart } from "@/lib/cart";
 import { tintOf } from "@/lib/types";
-import { money } from "@/lib/money";
+import { money, bgnToEur } from "@/lib/money";
 import { toast } from "./Toaster";
+import { fbTrack } from "./MetaPixel";
 
 // Slide-in cart drawer: opens from the right on desktop, covers the full screen
 // on mobile. Shows the cart with a checkout ("Поръчай") and a "Виж количката"
@@ -37,6 +38,13 @@ export default function CartDrawer({ open, onClose }: { open: boolean; onClose: 
   const checkout = async () => {
     if (ids.length === 0) return;
     setLoading(true);
+    const eurTotal = Math.round(bgnToEur(total) * 100) / 100;
+    try {
+      sessionStorage.setItem("lipko-purchase-value", String(eurTotal));
+    } catch {
+      /* ignore */
+    }
+    fbTrack("InitiateCheckout", { value: eurTotal, currency: "EUR", num_items: count });
     try {
       const payload = Object.fromEntries(ids.map((id) => [id, items[id].qty]));
       const res = await fetch("/api/checkout", {

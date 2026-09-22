@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import ClearCartOnMount from "@/components/ClearCartOnMount";
+import PurchaseTracking from "@/components/PurchaseTracking";
 
 export const metadata: Metadata = { title: "Благодарим" };
 
@@ -14,6 +15,7 @@ export default async function SuccessPage({
   return (
     <main className="wrap">
       <ClearCartOnMount />
+      <PurchaseTracking />
       <div className="cart-empty">
         <div className="cart-empty-mark">
           <span className="mk-c" />
