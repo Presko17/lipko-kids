@@ -35,6 +35,7 @@ model Product {
   featured  Boolean  @default(false) // ръчно избран за „Най-търсени“ на началната страница
   supplierUrl String? // линк към продукта в сайта на доставчика (напр. Faire)
   shipsFrom   String? // държава, от която се доставя артикулът, напр. "Германия"
+  supplierMinimum Float? // минимална поръчка при доставчика (марката във Faire), в евро
   sortOrder Int      @default(0)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

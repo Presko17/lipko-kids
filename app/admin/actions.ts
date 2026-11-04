@@ -71,6 +71,14 @@ function num(v: FormDataEntryValue | null, fallback = 0): number {
 }
 
 // Optional € amount → лв, or null when the field was left blank.
+// Optional plain € amount (not converted), e.g. the supplier's order minimum.
+function optionalEuro(v: FormDataEntryValue | null): number | null {
+  const s = String(v ?? "").trim().replace(",", ".");
+  if (!s) return null;
+  const n = Number(s);
+  return Number.isFinite(n) && n >= 0 ? Math.round(n * 100) / 100 : null;
+}
+
 function optionalEurToBgn(v: FormDataEntryValue | null): number | null {
   const s = String(v ?? "").trim();
   return s === "" ? null : eurToBgn(num(v));
@@ -122,6 +130,7 @@ export async function saveProductAction(formData: FormData) {
     variants: variantsJson(formData.get("variants")),
     supplierUrl: String(formData.get("supplierUrl") || "").trim() || null,
     shipsFrom: String(formData.get("shipsFrom") || "").trim() || null,
+    supplierMinimum: optionalEuro(formData.get("supplierMinimum")),
   };
 
   // Manual popularity is kept in the Setting store, not on the product row.
@@ -278,6 +287,9 @@ export async function importCreateProductAction(formData: FormData) {
       desc: String(formData.get("desc") || "").trim(),
       rating: num(formData.get("rating"), 4.8),
       reviews: Math.round(num(formData.get("reviews"))),
+      supplierUrl: String(formData.get("supplierUrl") || "").trim() || null,
+      shipsFrom: String(formData.get("shipsFrom") || "").trim() || null,
+      supplierMinimum: optionalEuro(formData.get("supplierMinimum")),
       active: false, // import as a hidden draft — admin reviews, then publishes
     },
   });

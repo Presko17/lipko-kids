@@ -28,6 +28,7 @@ export type Product = {
   variants: VariantGroup[]; // опции за избор (цвят/размер и др.); празен масив = без варианти
   supplierUrl: string | null; // линк към продукта при доставчика
   shipsFrom: string | null; // държава, от която се доставя, напр. "Германия"
+  supplierMinimum: number | null; // минимална поръчка при доставчика, в евро
   createdAt: string; // ISO дата на добавяне (за сортиране „Най-нови“)
   popularity: number; // ръчна популярност (резервно подреждане при липса на отзиви)
 };
@@ -114,6 +115,7 @@ export const CATEGORIES = [
   "Ролеви игри",
   "Катерушки и меки игри",
   "Каталки и возила",
+  "Плюшени играчки",
 ];
 
 export const TAGS = ["Хит", "Ново"];
@@ -128,6 +130,7 @@ export const CATEGORY_SLUGS: Record<string, string> = {
   "Ролеви игри": "rolevi-igri",
   "Катерушки и меки игри": "katerushki",
   "Каталки и возила": "katalki-vozila",
+  "Плюшени играчки": "plyusheni-igrachki",
 };
 
 // Fallback icon per category, used when a category has no product photo yet.
@@ -140,6 +143,7 @@ export const CATEGORY_EMOJI: Record<string, string> = {
   "Ролеви игри": "🎭",
   "Катерушки и меки игри": "🛝",
   "Каталки и возила": "🛴",
+  "Плюшени играчки": "🧸",
 };
 
 export const categoryToSlug = (name: string): string =>

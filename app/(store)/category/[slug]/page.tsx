@@ -17,10 +17,12 @@ export async function generateMetadata({
   const category = slugToCategory(slug);
   if (!category) return { title: "Категория" };
   const desc = INTROS[category] ?? `Играчки от категория „${category}“ в Липко.`;
+  // "Плюшени играчки" already ends in "играчки" — don't say it twice.
+  const title = /играчки$/i.test(category) ? category : `${category} играчки`;
   return {
-    title: `${category} играчки`,
+    title,
     description: desc,
-    openGraph: { title: `${category} играчки — Липко`, description: desc },
+    openGraph: { title: `${title} — Липко`, description: desc },
   };
 }
 
@@ -34,6 +36,7 @@ const INTROS: Record<string, string> = {
   Музикални: "Първи ритми и звуци — слух, координация и много усмивки.",
   "Ролеви игри": "Въображение и социални умения чрез игра на роли.",
   "Каталки и возила": "Колички за яздене, баланс-колела и тротинетки за активна игра и координация.",
+  "Плюшени играчки": "Меки приятели за гушкане, игра и спокоен сън.",
 };
 
 export default async function CategoryPage({

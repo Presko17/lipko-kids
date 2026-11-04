@@ -2089,3 +2089,13 @@ header.nav::before {
 .qbuy-name { font-size: 15px; line-height: 1.32; }
 .qbuy-price { font-size: 16.5px; }
 @media (max-width:560px){ .qbuy-name { font-size: 14px; } .qbuy-price { font-size: 15.5px; } }
+.assure .mk-emoji { font-size: 17px; line-height: 1; flex: none; width: 20px; text-align: center; }
+
+/* Sortable admin column headings */
+.admin-sort { all: unset; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; font: inherit; color: inherit; text-transform: inherit; letter-spacing: inherit; white-space: nowrap; border-radius: 6px; }
+.admin-sort:hover { color: var(--ink); }
+.admin-sort:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.admin-sort.on { color: var(--ink); }
+.admin-sort-ico { font-size: 11px; opacity: .45; }
+.admin-sort.on .admin-sort-ico { opacity: 1; }
+th.num .admin-sort { flex-direction: row; }

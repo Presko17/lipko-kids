@@ -74,6 +74,7 @@ export default function ImportForm() {
 
           <div className="admin-card">
             <form action={importCreateProductAction} className="admin-form admin-form-grid">
+              <input type="hidden" name="supplierUrl" value={data.sourceUrl} />
               <label className="col-2">
                 <span>Име</span>
                 <input name="name" defaultValue={data.name} required />
@@ -89,6 +90,23 @@ export default function ImportForm() {
               <label>
                 <span>Наличност (бр.)</span>
                 <input name="stock" type="number" defaultValue={0} required />
+              </label>
+
+              <label>
+                <span>Доставка от (държава)</span>
+                <input name="shipsFrom" defaultValue={data.shipsFrom ?? ""} placeholder="напр. Германия" />
+              </label>
+              <label>
+                <span>Минимална поръчка при доставчика (€)</span>
+                <input
+                  name="supplierMinimum"
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  inputMode="decimal"
+                  defaultValue={data.supplierMinimum ?? ""}
+                  placeholder="напр. 100"
+                />
               </label>
 
               <label>

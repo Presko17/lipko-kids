@@ -1,8 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { getAllProducts } from "@/lib/products";
-import { price } from "@/lib/money";
-import DeleteProductButton from "@/components/admin/DeleteProductButton";
+import ProductsTable from "@/components/admin/ProductsTable";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Продукти — Липко админ" };
@@ -49,59 +48,22 @@ export default async function AdminProductsPage({
 
       <div className="admin-card admin-card-flush">
         <div className="admin-table-wrap">
-          <table className="admin-table">
-            <thead>
-              <tr>
-                <th>Продукт</th>
-                <th>Категория</th>
-                <th>Доставка от</th>
-                <th className="num">Цена</th>
-                <th className="num">Наличност</th>
-                <th>Статус</th>
-                <th>Етикети</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {products.map((p) => (
-                <tr key={p.id}>
-                  <td>
-                    <Link href={`/admin/products/${p.id}`} className="admin-prod">
-                      <span className="admin-thumb">
-                        {p.images[0] ? <img src={p.images[0]} alt="" /> : <span>{p.emoji}</span>}
-                      </span>
-                      {p.name}
-                    </Link>
-                  </td>
-                  <td>{p.category}</td>
-                  <td className="admin-ships">
-                    {p.shipsFrom ? `Доставка от ${p.shipsFrom}` : <span className="admin-tag-none">—</span>}
-                  </td>
-                  <td className="num">{price(p.price)}</td>
-                  <td className="num">
-                    <span className={`admin-stock ${p.stock === 0 ? "out" : p.stock <= 5 ? "low" : ""}`}>
-                      {p.stock} бр.
-                    </span>
-                  </td>
-                  <td>
-                    <span className={`admin-pill ${p.active ? "ok" : ""}`}>
-                      {p.active ? "Активен" : "Скрит"}
-                    </span>
-                  </td>
-                  <td>
-                    <div className="admin-tags">
-                      {p.promo && <span className="admin-tag promo">Промо</span>}
-                      {p.featured && <span className="admin-tag featured">Търсен</span>}
-                      {!p.promo && !p.featured && <span className="admin-tag-none">—</span>}
-                    </div>
-                  </td>
-                  <td className="admin-row-actions">
-                    <DeleteProductButton id={p.id} name={p.name} />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <ProductsTable
+            products={products.map((p) => ({
+              id: p.id,
+              name: p.name,
+              image: p.images[0] ?? null,
+              emoji: p.emoji,
+              category: p.category,
+              shipsFrom: p.shipsFrom,
+              supplierMinimum: p.supplierMinimum,
+              price: p.price,
+              stock: p.stock,
+              active: p.active,
+              promo: p.promo,
+              featured: p.featured,
+            }))}
+          />
         </div>
       </div>
     </div>

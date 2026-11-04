@@ -11,6 +11,8 @@ export type ExtractedProduct = {
   currency: string | null; // e.g. "EUR", "USD"
   images: string[]; // absolute image URLs on the supplier's site
   sourceUrl: string;
+  shipsFrom: string | null; // държава на български, ако сайтът я показва (Faire: „Ships from …“)
+  supplierMinimum: number | null; // минимална поръчка при марката във Faire, в евро
   translated: boolean; // false when no ANTHROPIC_API_KEY was configured
 };
 
@@ -259,6 +261,36 @@ function ldPrice(offers: unknown): { price: number | null; currency: string | nu
   return { price: null, currency: null };
 }
 
+// Faire country names → Bulgarian (for the „Доставка от“ field).
+const COUNTRY_BG: Record<string, string> = {
+  Bulgaria: "България", Germany: "Германия", France: "Франция", Italy: "Италия", Spain: "Испания",
+  Portugal: "Португалия", Netherlands: "Нидерландия", Belgium: "Белгия", Denmark: "Дания", Sweden: "Швеция",
+  Norway: "Норвегия", Finland: "Финландия", Poland: "Полша", Czechia: "Чехия", "Czech Republic": "Чехия",
+  Slovakia: "Словакия", Slovenia: "Словения", Austria: "Австрия", Switzerland: "Швейцария", Hungary: "Унгария",
+  Romania: "Румъния", Greece: "Гърция", Croatia: "Хърватия", Latvia: "Латвия", Lithuania: "Литва",
+  Estonia: "Естония", Ireland: "Ирландия", "United Kingdom": "Великобритания", Ukraine: "Украйна",
+  Turkey: "Турция", "United States": "САЩ", Canada: "Канада", Australia: "Австралия", China: "Китай",
+};
+
+// Faire-only extras: the country the product ships from and the brand's order
+// minimum. Both live in the page's embedded data (escaped JSON).
+function faireExtras(html: string, url: string): { shipsFrom: string | null; supplierMinimum: number | null } {
+  if (!/faire\.com/i.test(url)) return { shipsFrom: null, supplierMinimum: null };
+  const t = html.replace(/\\+"/g, '"');
+  const pid = url.match(/\/product\/(p_[a-z0-9]+)/i)?.[1];
+  const country = t.match(/"text":"Ships from ([^"]+)","text_color"/)?.[1]?.trim() ?? null;
+  let min: number | null = null;
+  const brand = pid
+    ? t.match(new RegExp(`"product_token":"${pid}"[\\s\\S]{0,1500}?"brand_token":"(b_[a-z0-9]+)"`))?.[1]
+    : undefined;
+  if (brand) {
+    const i = t.indexOf(`"token":"${brand}"`);
+    const m = i >= 0 ? t.slice(i, i + 20000).match(/"minimum_order_amount":\{"amount_cents":(\d+)/) : null;
+    if (m) min = Number(m[1]) / 100;
+  }
+  return { shipsFrom: country ? COUNTRY_BG[country] ?? country : null, supplierMinimum: min };
+}
+
 // Parse a fetched supplier page into a raw (untranslated) product.
 function parseHtml(html: string, url: string): Omit<ExtractedProduct, "translated"> {
   let name = "";
@@ -337,7 +369,7 @@ function parseHtml(html: string, url: string): Omit<ExtractedProduct, "translate
   // De-dupe (preserving order → primary stays first) + cap.
   const uniqueImages = [...new Set(images)].slice(0, 12);
 
-  return { name, desc, price, currency, images: uniqueImages, sourceUrl: url };
+  return { name, desc, price, currency, images: uniqueImages, sourceUrl: url, ...faireExtras(html, url) };
 }
 
 async function translate(name: string, desc: string): Promise<{ name: string; desc: string } | null> {

@@ -130,13 +130,10 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
 
           <ul className="assure">
             <li>
-              <span className="mk m-circ" /> Безплатна доставка над {eurAmount(settings.freeShippingThreshold)} €
+              <span className="mk-emoji" aria-hidden="true">🚚</span> Безплатна доставка над {eurAmount(settings.freeShippingThreshold)} €
             </li>
             <li>
-              <span className="mk m-tri" /> Лесно връщане до 30 дни
-            </li>
-            <li>
-              <span className="mk m-sq" /> Доставка до 1 седмица
+              <span className="mk-emoji" aria-hidden="true">🔁</span> Лесно връщане до 30 дни
             </li>
           </ul>
 
