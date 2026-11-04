@@ -11,6 +11,7 @@ import ProductGallery from "@/components/ProductGallery";
 import RelatedCarousel from "@/components/RelatedCarousel";
 import CollapsibleDesc from "@/components/CollapsibleDesc";
 import StickyBuyBar from "@/components/StickyBuyBar";
+import WishButton from "@/components/WishButton";
 import JsonLd from "@/components/JsonLd";
 
 export const dynamic = "force-dynamic";
@@ -110,7 +111,10 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
         />
 
         <div className="pdp-info">
-          <div className="pdp-cat">{p.category}</div>
+          <div className="pdp-top">
+            <div className="pdp-cat">{p.category}</div>
+            <WishButton id={p.id} name={p.name} className="wish-top" />
+          </div>
           <h1 className="pdp-name">{p.name}</h1>
           {hasReviews && (
             <div className="pdp-rating">
@@ -132,7 +136,7 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
               <span className="mk m-tri" /> Лесно връщане до 30 дни
             </li>
             <li>
-              <span className="mk m-sq" /> Доставка до 2–3 работни дни
+              <span className="mk m-sq" /> Доставка до 1 седмица
             </li>
           </ul>
 

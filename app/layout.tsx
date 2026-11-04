@@ -1,5 +1,11 @@
 import type { Metadata } from "next";
+import { Rubik, Golos_Text } from "next/font/google";
 import "./globals.css";
+
+// Headings: Rubik (soft, friendly corners, full Cyrillic). Body: Golos Text,
+// drawn for Cyrillic first, so Bulgarian text reads evenly everywhere.
+const display = Rubik({ subsets: ["latin", "cyrillic"], weight: ["500", "600", "700"], variable: "--font-display", display: "swap" });
+const body = Golos_Text({ subsets: ["latin", "cyrillic"], weight: ["400", "500", "600", "700"], variable: "--font-body", display: "swap" });
 import { SITE, abs } from "@/lib/site";
 import Analytics from "@/components/Analytics";
 import MetaPixel from "@/components/MetaPixel";
@@ -46,7 +52,7 @@ const orgSchema = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="bg">
+    <html lang="bg" className={`${display.variable} ${body.variable}`}>
       <body>
         {children}
         <JsonLd data={orgSchema} />

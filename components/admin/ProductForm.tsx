@@ -158,6 +158,11 @@ export default function ProductForm({ product }: { product?: Product }) {
             />
           </label>
 
+          <label>
+            <span>Доставка от (държава)</span>
+            <input name="shipsFrom" defaultValue={p?.shipsFrom || ""} placeholder="напр. Германия" />
+          </label>
+
           <label className="col-2 admin-check">
             <input type="checkbox" name="active" defaultChecked={p ? p.active : true} />
             <span>Активен (видим в магазина)</span>

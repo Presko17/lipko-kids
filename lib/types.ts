@@ -27,6 +27,7 @@ export type Product = {
   featured: boolean; // ръчно избран за „Най-търсени“ в хероя на началната страница
   variants: VariantGroup[]; // опции за избор (цвят/размер и др.); празен масив = без варианти
   supplierUrl: string | null; // линк към продукта при доставчика
+  shipsFrom: string | null; // държава, от която се доставя, напр. "Германия"
   createdAt: string; // ISO дата на добавяне (за сортиране „Най-нови“)
   popularity: number; // ръчна популярност (резервно подреждане при липса на отзиви)
 };
@@ -198,4 +199,30 @@ export function sortProducts<
 export function stars(rating: number): string {
   const full = Math.round(rating);
   return "★".repeat(full) + "☆".repeat(5 - full);
+}
+
+// Text search over the catalogue: every typed word must appear somewhere in
+// the product. Used by the /search page and the header's live suggestions.
+const norm = (s: string) => (s ?? "").toLowerCase();
+export function searchProducts(all: Product[], term: string): Product[] {
+  const words = norm(term).split(/\s+/).filter(Boolean);
+  if (!words.length) return [];
+  return all.filter((p) => {
+    const hay = norm(`${p.name} ${p.category} ${p.material} ${p.age} ${p.tag ?? ""} ${p.desc}`);
+    return words.every((w) => hay.includes(w));
+  });
+}
+
+// Suggestion order: name starts with the query, then a word in the name does,
+// then the name contains it, then matches found only in other fields.
+export function rankSuggestions(matches: Product[], term: string): Product[] {
+  const q = norm(term.trim());
+  const score = (p: Product) => {
+    const n = norm(p.name);
+    if (n.startsWith(q)) return 0;
+    if (n.split(/[\s\-„“"(),.]+/).some((w) => w.startsWith(q))) return 1;
+    if (n.includes(q)) return 2;
+    return 3;
+  };
+  return [...matches].sort((a, b) => score(a) - score(b));
 }

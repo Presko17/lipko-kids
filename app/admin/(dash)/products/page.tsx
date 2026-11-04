@@ -7,22 +7,42 @@ import DeleteProductButton from "@/components/admin/DeleteProductButton";
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Продукти — Липко админ" };
 
-export default async function AdminProductsPage() {
-  const products = await getAllProducts();
+export default async function AdminProductsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ q?: string }>;
+}) {
+  const { q } = await searchParams;
+  const term = (q ?? "").trim().toLowerCase();
+  const all = await getAllProducts();
+  const products = term
+    ? all.filter((p) => `${p.name} ${p.category} ${p.id}`.toLowerCase().includes(term))
+    : all;
 
   return (
     <div className="admin-page">
       <header className="admin-head">
         <div>
           <h1>Продукти</h1>
-          <p>{products.length} общо</p>
+          <p>
+            {term ? (
+              <>
+                {products.length} от {all.length} за „{q}“ ·{" "}
+                <Link href="/admin/products" className="admin-clear">
+                  изчисти търсенето
+                </Link>
+              </>
+            ) : (
+              `${all.length} общо`
+            )}
+          </p>
         </div>
         <div className="admin-head-actions">
-          <Link href="/admin/import">
-            <button className="btn btn-ghost">⬇︎ Импортиране</button>
+          <Link href="/admin/import" className="btn btn-ghost">
+            Импортиране
           </Link>
-          <Link href="/admin/products/new">
-            <button className="btn btn-primary">+ Нов продукт</button>
+          <Link href="/admin/products/new" className="btn btn-primary">
+            + Нов продукт
           </Link>
         </div>
       </header>
@@ -34,6 +54,7 @@ export default async function AdminProductsPage() {
               <tr>
                 <th>Продукт</th>
                 <th>Категория</th>
+                <th>Доставка от</th>
                 <th className="num">Цена</th>
                 <th className="num">Наличност</th>
                 <th>Статус</th>
@@ -53,6 +74,9 @@ export default async function AdminProductsPage() {
                     </Link>
                   </td>
                   <td>{p.category}</td>
+                  <td className="admin-ships">
+                    {p.shipsFrom ? `Доставка от ${p.shipsFrom}` : <span className="admin-tag-none">—</span>}
+                  </td>
                   <td className="num">{price(p.price)}</td>
                   <td className="num">
                     <span className={`admin-stock ${p.stock === 0 ? "out" : p.stock <= 5 ? "low" : ""}`}>

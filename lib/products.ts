@@ -10,7 +10,7 @@ type Row = {
   id: string; name: string; price: number; oldPrice: number | null; cost: number | null; emoji: string; images: string | null;
   video: string | null; category: string; material: string; age: string;
   rating: number; reviews: number; tag: string | null; dim: string; desc: string;
-  stock: number; active: boolean; promo: boolean; featured: boolean; variants: string | null; supplierUrl: string | null;
+  stock: number; active: boolean; promo: boolean; featured: boolean; variants: string | null; supplierUrl: string | null; shipsFrom: string | null;
   createdAt: Date;
 };
 
@@ -48,6 +48,7 @@ function toProduct(row: Row): Product {
     featured: row.featured,
     variants: parseVariants(row.variants),
     supplierUrl: row.supplierUrl ?? null,
+    shipsFrom: row.shipsFrom ?? null,
     createdAt: row.createdAt.toISOString(),
     popularity: 0, // real value attached from the Setting store where needed
   };

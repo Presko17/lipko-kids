@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getCatalogProducts } from "@/lib/products";
-import { sortProducts } from "@/lib/types";
+import { sortProducts, searchProducts } from "@/lib/types";
 import ProductCard from "@/components/ProductCard";
 import SortSelect from "@/components/SortSelect";
 
@@ -21,8 +21,6 @@ export async function generateMetadata({
   };
 }
 
-const norm = (s: string) => (s ?? "").toLowerCase();
-
 export default async function SearchPage({
   searchParams,
 }: {
@@ -32,13 +30,7 @@ export default async function SearchPage({
   const term = (q ?? "").trim();
 
   const all = await getCatalogProducts();
-  const words = norm(term).split(/\s+/).filter(Boolean);
-  const matches = term
-    ? all.filter((p) => {
-        const hay = norm(`${p.name} ${p.category} ${p.material} ${p.age} ${p.tag ?? ""} ${p.desc}`);
-        return words.every((w) => hay.includes(w));
-      })
-    : [];
+  const matches = searchProducts(all, term);
   const sorted = sortProducts(matches, sort);
 
   return (

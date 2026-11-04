@@ -4,6 +4,7 @@ import { getProduct } from "@/lib/products";
 import { getSettings } from "@/lib/settings";
 import { bgnToEur } from "@/lib/money";
 import { splitCartKey } from "@/lib/types";
+import { currentAccount } from "@/lib/account";
 
 // Create a Stripe Checkout Session from the cart and return its hosted URL.
 // Prices are ALWAYS read from our own database on the server — never trusted
@@ -71,10 +72,14 @@ export async function POST(req: NextRequest) {
   const origin =
     req.headers.get("origin") || process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
+  // Signed-in customers: link the order to their account and prefill the email.
+  const account = await currentAccount().catch(() => null);
+
   const session = await stripe.checkout.sessions.create({
     mode: "payment",
     line_items,
-    metadata: { cart: JSON.stringify(cartForMeta) },
+    metadata: { cart: JSON.stringify(cartForMeta), ...(account ? { accountId: account.id } : {}) },
+    ...(account ? { customer_email: account.email } : {}),
     shipping_address_collection: {
       allowed_countries: ["BG", "RO", "GR", "DE", "AT", "GB"],
     },

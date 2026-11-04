@@ -7,10 +7,11 @@ import { tintOf, primaryImage, defaultVariantLabel } from "@/lib/types";
 import { useCart } from "@/lib/cart";
 import { price } from "@/lib/money";
 import { cartAdded } from "./CartAdded";
+import { Icon } from "./admin/icons";
+import WishButton from "./WishButton";
 
 export default function ProductCard({ product }: { product: Product }) {
   const { add } = useCart();
-  const [wished, setWished] = useState(false);
   const [added, setAdded] = useState(false);
   const soldOut = product.stock <= 0;
   const onSale = product.oldPrice != null && product.oldPrice > product.price;
@@ -64,18 +65,7 @@ export default function ProductCard({ product }: { product: Product }) {
         ) : (
           product.tag && <span className="badge">{product.tag}</span>
         )}
-        <button
-          className="wish"
-          aria-label="Добави в любими"
-          title="Любими"
-          onClick={(e) => {
-            e.stopPropagation();
-            setWished((w) => !w);
-          }}
-          style={{ color: wished ? "var(--t1-ink)" : undefined }}
-        >
-          {wished ? "♥" : "♡"}
-        </button>
+        <WishButton id={product.id} name={product.name} className="wish" />
       </div>
       <div className="info">
         <div className="cat">
@@ -90,24 +80,18 @@ export default function ProductCard({ product }: { product: Product }) {
             <span className={`price${onSale ? " on-sale" : ""}`}>{price(product.price)}</span>
             {onSale && <s className="price-old">{price(product.oldPrice as number)}</s>}
           </span>
-          <button
-            className={`add${added ? " added" : ""}`}
-            onClick={onAdd}
-            disabled={soldOut}
-            aria-label={`Добави ${product.name} в количката`}
-          >
-            {added ? (
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <path d="M20 6L9 17l-5-5" />
-              </svg>
-            ) : (
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <circle cx="9" cy="20" r="1.4" />
-                <circle cx="18" cy="20" r="1.4" />
-                <path d="M2 3h2.2l2.1 12a1.5 1.5 0 0 0 1.5 1.2h8.7a1.5 1.5 0 0 0 1.5-1.2L21 7H5.4" />
-              </svg>
-            )}
-          </button>
+          <div className="buy-actions">
+            {/* Phones: the heart sits next to the cart button instead of on the photo. */}
+            <WishButton id={product.id} name={product.name} className="wish-inline" size={19} />
+            <button
+              className={`add${added ? " added" : ""}`}
+              onClick={onAdd}
+              disabled={soldOut}
+              aria-label={`Добави ${product.name} в количката`}
+            >
+              <Icon name={added ? "check" : "bag"} size={20} />
+            </button>
+          </div>
         </div>
       </div>
     </article>

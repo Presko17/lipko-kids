@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { VARIANT_EVENT } from "./ProductActions";
 import type { Product } from "@/lib/types";
 import { primaryImage, defaultVariantLabel } from "@/lib/types";
 import { price } from "@/lib/money";
@@ -10,10 +12,19 @@ import { cartAdded } from "./CartAdded";
 export default function StickyBuyBar({ product }: { product: Product }) {
   const { add } = useCart();
   const soldOut = product.stock <= 0;
+  const [picked, setPicked] = useState<string | undefined>(undefined);
+  useEffect(() => {
+    const on = (e: Event) => {
+      const d = (e as CustomEvent<{ id: string; variant?: string }>).detail;
+      if (d?.id === product.id) setPicked(d.variant);
+    };
+    window.addEventListener(VARIANT_EVENT, on);
+    return () => window.removeEventListener(VARIANT_EVENT, on);
+  }, [product.id]);
 
   const onAdd = () => {
     if (soldOut) return;
-    const variant = defaultVariantLabel(product.variants);
+    const variant = picked ?? defaultVariantLabel(product.variants);
     add({
       id: product.id,
       name: product.name,

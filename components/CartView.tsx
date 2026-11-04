@@ -7,6 +7,7 @@ import { tintOf } from "@/lib/types";
 import { money, bgnToEur } from "@/lib/money";
 import { toast } from "./Toaster";
 import { fbTrack } from "./MetaPixel";
+import { Icon } from "./admin/icons";
 
 export default function CartView() {
   const { items, ready, setQty, remove, totals } = useCart();
@@ -152,15 +153,27 @@ export default function CartView() {
           <button className="btn btn-primary sum-checkout" onClick={checkout} disabled={loading}>
             {loading ? "Пренасочване…" : "Плащане"}
           </button>
-          <ul className="assure">
+          <ul className="trust" aria-label="Гаранции">
             <li>
-              <span className="mk m-circ" /> Сигурно плащане
+              <span className="trust-ico t-sage">
+                <Icon name="lock" size={17} />
+              </span>
+              <b>Сигурно</b>
+              <small>плащане чрез Stripe</small>
             </li>
             <li>
-              <span className="mk m-tri" /> Лесно връщане до 30 дни
+              <span className="trust-ico t-honey">
+                <Icon name="return" size={17} />
+              </span>
+              <b>Връщане</b>
+              <small>до 30 дни</small>
             </li>
             <li>
-              <span className="mk m-sq" /> 10 години гаранция за качество
+              <span className="trust-ico t-clay">
+                <Icon name="shield" size={17} />
+              </span>
+              <b>1 година</b>
+              <small>гаранция за качество</small>
             </li>
           </ul>
         </aside>

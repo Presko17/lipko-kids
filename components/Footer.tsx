@@ -3,6 +3,7 @@ import { SITE } from "@/lib/site";
 import { CATEGORIES, categoryToSlug } from "@/lib/types";
 import { eurAmount } from "@/lib/money";
 import LeafMark from "@/components/LeafMark";
+import { Icon } from "@/components/admin/icons";
 
 export default function Footer({ freeOver }: { freeOver: number }) {
   const topCats = CATEGORIES.slice(0, 4);
@@ -10,13 +11,15 @@ export default function Footer({ freeOver }: { freeOver: number }) {
     <footer>
       <div className="wrap">
         <div className="foot-promise">
-          🚚 Доставка до 2–3 работни дни · безплатна над {eurAmount(freeOver)} € · лесно връщане до 30 дни
+          <Icon name="truck" size={16} /> Доставка до 1 седмица · безплатна над {eurAmount(freeOver)} € · лесно връщане до 30 дни
         </div>
         <div className="foot-grid">
           <div>
-            <Link href="/" className="logo" style={{ fontSize: 19 }}>
-              <LeafMark />
-              Липко
+            <Link href="/" className="logo">
+              <span className="logo-tile">
+                <LeafMark />
+              </span>
+              <span className="logo-text">Липко</span>
             </Link>
             <p style={{ color: "var(--muted)", maxWidth: "34ch", marginTop: 14, fontSize: 14 }}>
               Образователни играчки, които учат децата на нещо истинско — букви, числа, логика и

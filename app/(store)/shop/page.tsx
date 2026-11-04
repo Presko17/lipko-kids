@@ -31,7 +31,7 @@ export default async function ShopPage() {
         <div className="shop-cats">
           <Link href="/shop/all" className="shop-cat shop-cat-all tint-0">
             <span className="shop-cat-img">
-              <span className="shop-cat-emoji">✨</span>
+              <img src="/categories/all.webp" alt="Всички играчки" />
             </span>
             <span className="shop-cat-name">Всички играчки</span>
           </Link>

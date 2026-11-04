@@ -56,6 +56,7 @@ function toOrder(row: Row): Order {
 
 type SaveInput = Omit<Order, "createdAt" | "status" | "tracking"> & {
   createdAt: string;
+  accountId?: string | null;
 };
 
 // Idempotent — Stripe can deliver the same event twice.
@@ -73,6 +74,7 @@ export async function saveOrder(order: SaveInput): Promise<void> {
       currency: order.currency,
       shippingAddress: order.shippingAddress,
       paymentStatus: order.paymentStatus,
+      accountId: order.accountId ?? undefined,
       items: {
         create: order.items.map((i) => ({
           name: i.name,
@@ -96,6 +98,16 @@ export async function getOrders(): Promise<Order[]> {
 export async function getOrder(id: string): Promise<Order | null> {
   const row = await prisma.order.findUnique({ where: { id }, include: { items: true } });
   return row ? toOrder(row) : null;
+}
+
+// Orders placed while signed in to this customer account, newest first.
+export async function getOrdersForAccount(accountId: string): Promise<Order[]> {
+  const rows = await prisma.order.findMany({
+    where: { accountId },
+    include: { items: true },
+    orderBy: { createdAt: "desc" },
+  });
+  return rows.map(toOrder);
 }
 
 export async function getOrderForCustomer(id: string, email: string): Promise<Order | null> {

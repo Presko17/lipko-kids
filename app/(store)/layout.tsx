@@ -1,4 +1,5 @@
 import { CartProvider } from "@/lib/cart";
+import { WishlistProvider } from "@/lib/wishlist";
 import { getSettings } from "@/lib/settings";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
@@ -16,12 +17,14 @@ export default async function StoreLayout({ children }: { children: React.ReactN
   const settings = await getSettings();
   return (
     <CartProvider freeOver={settings.freeShippingThreshold} shipRate={settings.shippingRate}>
-      <Nav />
-      {children}
-      <Footer freeOver={settings.freeShippingThreshold} />
-      <Toaster />
-      <CartAdded />
-      <CookieBanner />
+      <WishlistProvider>
+        <Nav />
+        {children}
+        <Footer freeOver={settings.freeShippingThreshold} />
+        <Toaster />
+        <CartAdded />
+        <CookieBanner />
+      </WishlistProvider>
     </CartProvider>
   );
 }

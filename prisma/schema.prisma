@@ -34,6 +34,7 @@ model Product {
   promo     Boolean  @default(false) // на промоция — показва се на лендинг страницата
   featured  Boolean  @default(false) // ръчно избран за „Най-търсени“ на началната страница
   supplierUrl String? // линк към продукта в сайта на доставчика (напр. Faire)
+  shipsFrom   String? // държава, от която се доставя артикулът, напр. "Германия"
   sortOrder Int      @default(0)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -51,8 +52,11 @@ model Order {
   status          String      @default("Обработва се") // изпълнение на поръчката
   tracking        String?
   items           OrderItem[]
+  accountId       String? // клиентски профил, ако е поръчал влязъл в профила си
+  account         Account?    @relation(fields: [accountId], references: [id], onDelete: SetNull)
 
   @@index([email])
+  @@index([accountId])
 }
 
 model OrderItem {
@@ -68,4 +72,25 @@ model OrderItem {
 model Setting {
   key   String @id
   value String
+}
+
+// Клиентски профил (имейл + парола). Пази любимите и свързва поръчките,
+// направени докато клиентът е влязъл.
+model Account {
+  id           String     @id @default(cuid())
+  email        String     @unique // с малки букви
+  name         String?
+  passwordHash String // scrypt: salt:hash
+  createdAt    DateTime   @default(now())
+  favorites    Favorite[]
+  orders       Order[]
+}
+
+model Favorite {
+  account   Account  @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  accountId String
+  productId String
+  createdAt DateTime @default(now())
+
+  @@id([accountId, productId])
 }

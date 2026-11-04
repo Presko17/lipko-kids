@@ -121,6 +121,7 @@ export async function saveProductAction(formData: FormData) {
     featured: formData.get("featured") === "on",
     variants: variantsJson(formData.get("variants")),
     supplierUrl: String(formData.get("supplierUrl") || "").trim() || null,
+    shipsFrom: String(formData.get("shipsFrom") || "").trim() || null,
   };
 
   // Manual popularity is kept in the Setting store, not on the product row.

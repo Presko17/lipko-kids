@@ -7,6 +7,13 @@ import { eurToBgn } from "@/lib/money";
 import { splitCartKey } from "@/lib/types";
 
 export const runtime = "nodejs";
+
+// The account id the checkout was started with, if that account still exists.
+async function accountFor(id: string | undefined): Promise<string | null> {
+  if (!id) return null;
+  const acc = await prisma.account.findUnique({ where: { id }, select: { id: true } }).catch(() => null);
+  return acc?.id ?? null;
+}
 export const dynamic = "force-dynamic";
 
 // Stripe calls this when events happen (e.g. a payment completes). We verify the
@@ -80,6 +87,7 @@ export async function POST(req: NextRequest) {
         items,
         shippingAddress,
         paymentStatus: session.payment_status ?? null,
+        accountId: await accountFor(session.metadata?.accountId),
       });
     } catch (err) {
       console.error("Failed to record order:", err);

@@ -6,7 +6,6 @@ export default function Newsletter() {
   return (
     <section className="wrap" id="news">
       <div className="news">
-        <div className="deco" />
         <div>
           <h2>Специални предложения за нашите абонати</h2>
           <p>Абонирайте се за специални оферти, новите ни продукти и идеи за игра по възраст.</p>
