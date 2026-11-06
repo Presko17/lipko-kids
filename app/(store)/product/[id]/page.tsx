@@ -54,6 +54,7 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
   const catSlug = categoryToSlug(p.category);
   const hasReviews = p.reviews > 0;
 
+  const shipBgn = p.price >= settings.freeShippingThreshold ? 0 : settings.shippingRate;
   const productSchema = {
     "@context": "https://schema.org",
     "@type": "Product",
@@ -61,9 +62,24 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
     description: shortDesc(p.desc),
     image: (p.images.length ? p.images : []).map((i) => abs(i)),
     category: p.category,
+    sku: p.id,
     brand: { "@type": "Brand", name: "Липко" },
     offers: {
       "@type": "Offer",
+      itemCondition: "https://schema.org/NewCondition",
+      seller: { "@type": "Organization", name: "Липко" },
+      shippingDetails: {
+        "@type": "OfferShippingDetails",
+        shippingRate: { "@type": "MonetaryAmount", value: bgnToEur(shipBgn).toFixed(2), currency: "EUR" },
+        shippingDestination: { "@type": "DefinedRegion", addressCountry: "BG" },
+      },
+      hasMerchantReturnPolicy: {
+        "@type": "MerchantReturnPolicy",
+        applicableCountry: "BG",
+        returnPolicyCategory: "https://schema.org/MerchantReturnFiniteReturnWindow",
+        merchantReturnDays: 30,
+        returnMethod: "https://schema.org/ReturnByMail",
+      },
       price: bgnToEur(p.price).toFixed(2),
       priceCurrency: "EUR",
       availability: p.stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",

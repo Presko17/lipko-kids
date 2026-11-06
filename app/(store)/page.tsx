@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Shop from "@/components/Shop";
 import Newsletter from "@/components/Newsletter";
@@ -9,6 +10,11 @@ import { sortProducts } from "@/lib/types";
 // Live storefront data (promos + popular products) — render on demand so the
 // build never needs the database.
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: { absolute: "Липко — Образователни, Монтесори и дървени играчки онлайн" },
+  alternates: { canonical: "/" },
+};
 
 export default async function HomePage() {
   // Hero highlights the "most-searched" products for quick buying. The shop

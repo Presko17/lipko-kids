@@ -30,6 +30,7 @@ export type Product = {
   shipsFrom: string | null; // държава, от която се доставя, напр. "Германия"
   supplierMinimum: number | null; // минимална поръчка при доставчика, в евро
   createdAt: string; // ISO дата на добавяне (за сортиране „Най-нови“)
+  updatedAt?: string; // ISO дата на последна промяна (за sitemap)
   popularity: number; // ръчна популярност (резервно подреждане при липса на отзиви)
 };
 

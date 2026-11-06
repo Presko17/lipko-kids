@@ -9,6 +9,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Всички играчки",
   description: "Всички налични образователни и дървени играчки в Липко на едно място.",
+  alternates: { canonical: "/shop/all" },
 };
 
 export default async function AllProductsPage({

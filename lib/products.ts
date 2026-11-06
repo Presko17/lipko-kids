@@ -12,6 +12,7 @@ type Row = {
   rating: number; reviews: number; tag: string | null; dim: string; desc: string;
   stock: number; active: boolean; promo: boolean; featured: boolean; variants: string | null; supplierUrl: string | null; shipsFrom: string | null; supplierMinimum: number | null;
   createdAt: Date;
+  updatedAt?: Date;
 };
 
 function parseImages(json: string | null): string[] {
@@ -51,6 +52,7 @@ function toProduct(row: Row): Product {
     shipsFrom: row.shipsFrom ?? null,
     supplierMinimum: row.supplierMinimum ?? null,
     createdAt: row.createdAt.toISOString(),
+    updatedAt: (row.updatedAt ?? row.createdAt).toISOString(),
     popularity: 0, // real value attached from the Setting store where needed
   };
 }

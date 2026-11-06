@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
-  const staticPages = ["/", "/shop", "/shop/all", "/faq", "/privacy", "/orders"].map((p) => ({
+  const staticPages = ["/", "/shop", "/shop/all", "/faq", "/privacy"].map((p) => ({
     url: abs(p),
     lastModified: now,
     changeFrequency: "weekly" as const,
@@ -26,7 +26,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const list = await getCatalogProducts();
     products = list.map((p) => ({
       url: abs(`/product/${p.id}`),
-      lastModified: new Date(p.createdAt),
+      lastModified: new Date(p.updatedAt ?? p.createdAt),
       changeFrequency: "weekly" as const,
       priority: 0.8,
     }));

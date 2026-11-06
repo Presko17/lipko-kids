@@ -5,6 +5,7 @@ import { SITE } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Политика за поверителност",
   description: "Как Липко събира, използва и защитава личните ви данни.",
+  alternates: { canonical: "/privacy" },
 };
 
 export default function PrivacyPage() {

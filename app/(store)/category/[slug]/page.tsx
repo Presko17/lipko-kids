@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { abs } from "@/lib/site";
+import JsonLd from "@/components/JsonLd";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getByCategory } from "@/lib/products";
@@ -22,7 +24,8 @@ export async function generateMetadata({
   return {
     title,
     description: desc,
-    openGraph: { title: `${title} — Липко`, description: desc },
+    alternates: { canonical: abs(`/category/${slug}`) },
+    openGraph: { title: `${title} — Липко`, description: desc, url: abs(`/category/${slug}`) },
   };
 }
 
@@ -56,6 +59,17 @@ export default async function CategoryPage({
 
   return (
     <main className="section">
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Начало", item: abs("/") },
+            { "@type": "ListItem", position: 2, name: "Магазин", item: abs("/shop") },
+            { "@type": "ListItem", position: 3, name: category, item: abs(`/category/${slug}`) },
+          ],
+        }}
+      />
       <div className="wrap">
         <nav className="crumbs" aria-label="Трохи">
           <Link href="/">Начало</Link>

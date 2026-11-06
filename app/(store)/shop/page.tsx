@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   title: "Магазин",
   description:
     "Разгледайте играчките в Липко по категория — Монтесори, STEM, пъзели, образователни, ролеви игри и още.",
+  alternates: { canonical: "/shop" },
 };
 
 export default async function ShopPage() {
