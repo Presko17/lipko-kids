@@ -7,6 +7,7 @@ import { tintOf } from "@/lib/types";
 import { money, bgnToEur } from "@/lib/money";
 import { toast } from "./Toaster";
 import { fbTrack } from "./MetaPixel";
+import { gaEvent, gaItem, stashPurchaseItems } from "@/lib/track";
 
 // Slide-in cart drawer: opens from the right on desktop, covers the full screen
 // on mobile. Shows the cart with a checkout ("Поръчай") and a "Виж количката"
@@ -45,6 +46,12 @@ export default function CartDrawer({ open, onClose }: { open: boolean; onClose: 
       /* ignore */
     }
     fbTrack("InitiateCheckout", { value: eurTotal, currency: "EUR", num_items: count });
+    const gaItems = ids.map((id) => {
+      const { product, qty } = items[id];
+      return gaItem({ id: product.id, name: product.name, category: product.category, variant: product.variant, price: product.price, qty });
+    });
+    stashPurchaseItems(gaItems);
+    gaEvent("begin_checkout", { currency: "EUR", value: eurTotal, items: gaItems });
     try {
       const payload = Object.fromEntries(ids.map((id) => [id, items[id].qty]));
       const res = await fetch("/api/checkout", {

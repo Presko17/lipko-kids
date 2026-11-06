@@ -37,6 +37,8 @@ export default function StickyBuyBar({ product }: { product: Product }) {
       variant,
     });
     cartAdded({
+      id: product.id,
+      category: product.category,
       name: product.name,
       image: primaryImage(product),
       emoji: product.emoji,

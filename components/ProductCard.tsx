@@ -37,6 +37,8 @@ export default function ProductCard({ product }: { product: Product }) {
     });
     setAdded(true);
     cartAdded({
+      id: product.id,
+      category: product.category,
       name: product.name,
       image: primaryImage(product),
       emoji: product.emoji,

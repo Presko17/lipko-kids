@@ -27,6 +27,8 @@ export default function QuickBuy({ products }: { products: Product[] }) {
       variant,
     });
     cartAdded({
+      id: p.id,
+      category: p.category,
       name: p.name,
       image: primaryImage(p),
       emoji: p.emoji,

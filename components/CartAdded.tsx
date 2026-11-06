@@ -12,6 +12,8 @@ export type CartAddedDetail = {
   price: number;
   qty: number;
   variant?: string;
+  id?: string; // for analytics
+  category?: string; // for analytics
 };
 
 // Fire the "added to cart" popup from anywhere (product card, PDP, quick buy…).

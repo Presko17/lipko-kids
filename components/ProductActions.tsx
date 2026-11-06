@@ -6,6 +6,7 @@ import { primaryImage } from "@/lib/types";
 import { useCart } from "@/lib/cart";
 import { cartAdded } from "./CartAdded";
 import WishButton from "./WishButton";
+import { gaEvent, gaItem, eur } from "@/lib/track";
 
 export const VARIANT_EVENT = "lipko:variant";
 
@@ -22,6 +23,15 @@ export default function ProductActions({ product }: { product: Product }) {
   const variantLabel = product.variants.length
     ? product.variants.map((g) => `${g.label}: ${sel[g.label]}`).join(" · ")
     : undefined;
+
+  // Analytics: one view_item per product page view.
+  useEffect(() => {
+    gaEvent("view_item", {
+      currency: "EUR",
+      value: eur(product.price),
+      items: [gaItem({ id: product.id, name: product.name, category: product.category, price: product.price })],
+    });
+  }, [product.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Let the mobile sticky bar add the same variant the shopper picked here.
   useEffect(() => {
@@ -45,6 +55,8 @@ export default function ProductActions({ product }: { product: Product }) {
       qty
     );
     cartAdded({
+      id: product.id,
+      category: product.category,
       name: product.name,
       image: primaryImage(product),
       emoji: product.emoji,

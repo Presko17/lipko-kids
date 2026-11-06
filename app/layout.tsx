@@ -8,6 +8,7 @@ const display = Rubik({ subsets: ["latin", "cyrillic"], weight: ["500", "600", "
 const body = Golos_Text({ subsets: ["latin", "cyrillic"], weight: ["400", "500", "600", "700"], variable: "--font-body", display: "swap" });
 import { SITE, abs } from "@/lib/site";
 import Analytics from "@/components/Analytics";
+import VercelAnalytics from "@/components/VercelAnalytics";
 import MetaPixel from "@/components/MetaPixel";
 import JsonLd from "@/components/JsonLd";
 
@@ -57,6 +58,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {children}
         <JsonLd data={orgSchema} />
         <Analytics />
+        <VercelAnalytics />
         <MetaPixel />
       </body>
     </html>

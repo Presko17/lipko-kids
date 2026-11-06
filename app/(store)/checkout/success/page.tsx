@@ -15,7 +15,7 @@ export default async function SuccessPage({
   return (
     <main className="wrap">
       <ClearCartOnMount />
-      <PurchaseTracking />
+      <PurchaseTracking sessionId={session_id} />
       <div className="cart-empty">
         <div className="cart-empty-mark">
           <span className="mk-c" />
